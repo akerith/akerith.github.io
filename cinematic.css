@@ -11,7 +11,7 @@ nav{font-family:var(--serif);font-size:19px;gap:43px}
 nav span{font-family:Arial,Helvetica,sans-serif;font-size:9px}
 .hero{position:relative;isolation:isolate;min-height:740px;height:min(900px,96svh);overflow:hidden;background:#0c0e0e}
 .hero-scene{position:absolute;inset:0;z-index:-2;overflow:hidden;pointer-events:none}
-.hero-art{position:absolute;inset:-14px;background:url('assets/portal-cinematic.webp') right center/auto 100% no-repeat;transform:translate3d(var(--px,0px),var(--py,0px),0);transition:transform 1.3s cubic-bezier(.2,.6,.2,1);will-change:transform}
+.hero-art{position:absolute;inset:-14px;background:url('assets/portal-cinematic-v2.webp') right center/auto 100% no-repeat;transform:translate3d(var(--px,0px),var(--py,0px),0);transition:transform 1.3s cubic-bezier(.2,.6,.2,1);will-change:transform}
 .hero:after{content:'';position:absolute;inset:0;z-index:-1;pointer-events:none;background:linear-gradient(90deg,#090c0d6b,transparent 58%),linear-gradient(0deg,#0c0e0e 0%,transparent 19%,transparent 80%,#06090955)}
 .hero-content{position:relative;padding-top:clamp(225px,25vh,285px);padding-bottom:150px}
 .hero-content .eyebrow{color:#ccbca1;font-size:10px;letter-spacing:2.3px;margin-bottom:34px}
