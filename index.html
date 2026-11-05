@@ -11,34 +11,36 @@
   <meta property="og:url" content="https://akerith.github.io/">
   <meta property="og:image" content="https://akerith.github.io/assets/lsgames-logo.png">
   <title>LSGames Studio — Giochi indipendenti</title>
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="assets/fonts/fonts.css">
   <link rel="preload" as="image" href="assets/portal-cinematic-v2.webp">
-  <link rel="stylesheet" href="cinematic.css">
+  <link rel="stylesheet" href="studio.css">
   <script src="cinematic.js" defer></script>
+<link rel="preload" href="assets/fonts/latin-0.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/latin-1.woff2" as="font" type="font/woff2" crossorigin>
 </head>
-<body class="home">
+<body class="home" id="top">
   <a class="skip" href="#contenuto">Vai al contenuto</a>
   <header class="header wrap">
-    <a class="brand" href="#" aria-label="LSGames Studio, inizio pagina"><img src="assets/lsgames-logo.png" alt="LSGames" width="1882" height="1028"></a>
-    <nav aria-label="Navigazione principale"><a href="#giochi">I giochi <span>01</span></a><a href="#studio">Lo studio</a><a href="#contatti">Contatti <span aria-hidden="true">↗</span></a></nav>
+    <a class="brand" href="#top" aria-label="LSGames Studio, inizio pagina"><img src="assets/lsgames-logo.png" alt="LSGames" width="1882" height="1028"></a>
+    <nav aria-label="Navigazione principale"><a href="#giochi">Giochi</a><a href="#studio">Lo studio</a><a href="#contatti">Contatti</a></nav>
   </header>
   <main id="contenuto">
     <section class="hero" aria-labelledby="intro-title">
       <div class="hero-scene" aria-hidden="true"><div class="hero-art"></div><div class="portal-glow"></div><div class="haze"></div><div class="embers"></div></div>
-      <div class="hero-content wrap"><p class="eyebrow">LSGames Studio / Giochi indipendenti</p><h1 id="intro-title">Ogni gioco,<br>un nuovo mondo.</h1><p class="hero-description">Una porta da aprire. Un percorso da scegliere.<br>Il resto comincia giocando.</p><a class="hero-link" href="#giochi">Esplora i giochi <span aria-hidden="true">↗</span></a></div>
+      <div class="hero-content wrap"><p class="eyebrow">LSGames Studio / Giochi indipendenti</p><h1 id="intro-title">Ogni gioco,<br>un nuovo mondo.</h1><p class="hero-description">Videogiochi indipendenti per mobile.<br>Un percorso da scegliere, un mondo da scoprire.</p><div class="hero-actions"><a class="hero-link" href="#giochi">Esplora i giochi <span aria-hidden="true">↗</span></a><a class="quiet-link" href="#studio">Conosci lo studio</a></div></div>
       <div class="hero-bottom wrap"><a class="scroll-cue" href="#giochi"><span aria-hidden="true">↓</span> Scopri LSGames</a><button class="motion-toggle" type="button" aria-pressed="true" hidden><span class="motion-icon" aria-hidden="true">Ⅱ</span> <span class="motion-label">Pausa animazioni</span></button></div>
     </section>
     <section id="giochi" class="games wrap" aria-labelledby="games-title">
-      <div class="section-heading"><h2 id="games-title">I nostri giochi</h2><p>Il catalogo, dall’inizio.</p><span class="index" aria-hidden="true">01 —</span></div>
+      <div class="section-heading"><div><p class="eyebrow">01 / Il catalogo</p><h2 id="games-title">I nostri giochi.</h2></div><p>Il primo titolo di LSGames.<br>Altri mondi seguiranno.</p></div>
       <article class="game">
-        <div class="game-art"><img src="assets/atlantide.jpg" alt="Un raggio di luce attraversa un cristallo e illumina un portale nelle rovine sommerse di Atlantide" width="1024" height="500" loading="lazy"><span class="art-caption">ATLANTIDE / GATES OF LIGHT</span></div>
-        <div class="game-info"><p class="eyebrow">Il nostro primo gioco <span aria-hidden="true">↗</span></p><div><h3>Atlantide<span>Gates of Light</span></h3><p class="game-description">Un puzzle di luce tra cristalli, pietre e prismi. Trova il percorso dei raggi e riapri le porte della città sommersa.</p></div><div class="game-links"><a class="button" href="https://play.google.com/store/apps/details?id=com.lsgames.atlantide">Scopri su Google Play <span aria-hidden="true">↗</span></a><a class="text-link" href="atlantide/">Guarda il gioco <span aria-hidden="true">↗</span></a></div></div>
+        <a class="game-art" href="atlantide/" aria-label="Scopri Atlantide: Gates of Light"><img src="assets/atlantide.jpg" alt="Un raggio di luce attraversa un cristallo e illumina un portale nelle rovine sommerse di Atlantide" width="1024" height="500" loading="lazy"><span class="art-caption">Esplora Atlantide <span aria-hidden="true">↗</span></span></a>
+        <div class="game-info"><p class="eyebrow">01 / Puzzle · Mobile</p><div><h3>Atlantide<span>Gates of Light</span></h3><p class="game-description">Un puzzle di luce tra cristalli, pietre e prismi. Orienta i raggi e riapri le porte della città sommersa.</p></div><div class="game-links"><a class="button" href="atlantide/">Scopri Atlantide <span aria-hidden="true">↗</span></a><a class="text-link" href="https://play.google.com/store/apps/details?id=com.lsgames.atlantide">Google Play <span aria-hidden="true">↗</span></a></div></div>
       </article>
-      <div class="next"><span class="small-number" aria-hidden="true">02 / …</span><h3>Altri mondi<br>prenderanno forma.</h3><p>Atlantide è l’inizio.<br>I prossimi giochi troveranno posto qui.</p><span class="next-mark" aria-hidden="true">+</span></div>
+      <div class="next"><span class="small-number">A seguire</span><p>Altre idee. Nuove strade da percorrere.</p><span class="next-mark" aria-hidden="true">—</span></div>
     </section>
-    <section id="studio" class="studio" aria-labelledby="studio-title"><div class="wrap studio-grid"><p class="eyebrow">Dietro LSGames</p><div><h2 id="studio-title">Dietro ogni mondo,<br>una nuova idea.</h2><div class="studio-copy"><p>Mi chiamo Gaetano Tommaso Lo Scalzo e LSGames è il mio studio indipendente di videogiochi per Android e iOS.</p><p>Il percorso comincia con Atlantide: Gates of Light. Il nome e il simbolo raccontano il punto di partenza: una porta bianca, un percorso nero e un piccolo giocatore arancione. A ogni gioco, una strada diversa.</p></div></div></div></section>
-    <section id="contatti" class="contact wrap" aria-labelledby="contact-title"><p class="eyebrow"><i aria-hidden="true"></i> Restiamo in contatto</p><div class="contact-grid"><h2 id="contact-title">Due parole?</h2><div><p>Per domande sui giochi, segnalazioni<br>o proposte di collaborazione.</p><a class="email" href="mailto:lsgame.wftd@gmail.com">lsgame.wftd@gmail.com <span aria-hidden="true">↗</span></a></div></div></section>
+    <section id="studio" class="studio" aria-labelledby="studio-title"><div class="wrap studio-grid"><div class="studio-text"><p class="eyebrow">02 / Lo studio</p><h2 id="studio-title">Una visione personale.<br>Un mondo alla volta.</h2><p class="studio-lead">LSGames è lo studio indipendente di Gaetano Tommaso Lo Scalzo. Creo videogiochi per mobile, a partire da Atlantide: Gates of Light.</p><p class="studio-copy">Una porta, un percorso, un giocatore. Il simbolo dello studio racchiude l’inizio di ogni avventura: scegliere una direzione e scoprire cosa c’è oltre.</p><div class="studio-signature"><span>Gaetano Tommaso Lo Scalzo</span><span>Sviluppatore indipendente</span></div></div><div class="studio-visual" aria-hidden="true"><div class="studio-emblem"><img src="assets/lsgames-logo.png" alt="" width="1882" height="1028"></div><span class="visual-caption">La prossima avventura comincia da una porta.</span></div></div></section>
+    <section id="contatti" class="contact wrap" aria-labelledby="contact-title"><p class="eyebrow">03 / Contatti</p><div class="contact-grid"><h2 id="contact-title">Parliamone.</h2><div><p>Supporto per i giochi, domande<br>e proposte di collaborazione.</p><a class="email" href="mailto:lsgame.wftd@gmail.com">lsgame.wftd@gmail.com <span aria-hidden="true">↗</span></a></div></div></section>
   </main>
-  <footer class="footer wrap"><p>© 2026 LSGames Studio</p><a href="atlantide/privacy.html">Privacy di Atlantide / Privacy Policy</a><a href="#">Torna su <span aria-hidden="true">↑</span></a></footer>
+  <footer class="footer wrap"><p>© 2026 LSGames Studio</p><a href="atlantide/privacy.html">Privacy di Atlantide / Privacy Policy</a><a href="#top">Torna su <span aria-hidden="true">↑</span></a></footer>
 </body>
 </html>
