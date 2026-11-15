@@ -16,7 +16,7 @@
     button.hidden = reduced.matches;
     body.classList.toggle('motion-paused', !enabled);
     button.setAttribute('aria-pressed', String(enabled));
-    label.textContent = enabled ? 'Pausa animazioni' : 'Attiva animazioni';
+    label.textContent = enabled ? button.dataset.pause : button.dataset.play;
     icon.textContent = enabled ? 'Ⅱ' : '▷';
     if (!enabled) {
       hero.style.removeProperty('--px');
