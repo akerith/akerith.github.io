@@ -23,8 +23,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--light); outline
 ::selection { background: #a3683e; color: #fff3dc; }
 img { display: block; max-width: 100%; height: auto; }
 h1, h2, h3 { font-family: var(--serif); font-weight: 400; margin: 0; text-wrap: balance; }
-/* Cormorant ha di serie le cifre "antiche" (1 sembra una I): si usano quelle allineate */
-h1, h2, h3, .rules > li::before, .feature-list strong, figcaption { font-variant-numeric: lining-nums; }
+/* Cormorant ha di serie le cifre "antiche" (100 si legge "ioo"): si usano quelle allineate.
+   Vale per ogni elemento e con !important, perché la proprietà abbreviata `font` azzera
+   font-variant-numeric: elencare i selettori uno per uno ne aveva lasciato fuori uno. */
+*, *::before, *::after { font-variant-numeric: lining-nums !important; }
 p { margin: 0 0 1em; }
 .wrap { width: min(1240px, calc(100% - 120px)); margin-inline: auto; }
 .label { margin: 0; font-size: 14px; font-weight: 500; letter-spacing: .02em; color: #dfcaac; }
