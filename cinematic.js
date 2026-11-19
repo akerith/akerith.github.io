@@ -96,14 +96,23 @@
   });
 
   // I numeri dello studio contano fino al valore vero.
+  // Ogni volta che il numero torna sullo schermo riparte il conteggio.
+  document.querySelectorAll('.studio-facts dd').forEach((dd) => {
+    const value = dd.textContent.trim();
+    if (/^\d+$/.test(value)) dd.dataset.target = value;
+  });
   const countUp = (dd) => {
-    const target = parseInt(dd.textContent, 10);
-    if (!Number.isFinite(target) || String(target) !== dd.textContent.trim()) return;
+    if (!dd || !dd.dataset.target) return;
+    const target = parseInt(dd.dataset.target, 10);
     const from = target >= 1000 ? target - 26 : 0;
     const start = performance.now();
+    const run = (dd._run || 0) + 1;
+    dd._run = run;
     const holder = dd.parentElement;
     holder.classList.add('counting');
     const step = (now) => {
+      if (dd._run !== run) return;
+      if (!enabled) { dd.textContent = dd.dataset.target; holder.classList.remove('counting'); return; }
       const t = clamp((now - start) / 1500);
       const eased = 1 - Math.pow(1 - t, 3);
       dd.textContent = String(Math.round(from + (target - from) * eased));
@@ -115,17 +124,27 @@
 
   const showAll = () => watched.forEach((el) => el.classList.add('is-in'));
 
+  // Gli elementi entrano in scena ogni volta che arrivano sullo schermo, scendendo e risalendo:
+  // quando escono del tutto dallo schermo tornano al punto di partenza, pronti a rientrare.
   if ('IntersectionObserver' in window) {
-    const io = new IntersectionObserver((entries) => {
+    const enter = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
-        if (!entry.isIntersecting) return;
         const el = entry.target;
+        if (entry.intersectionRatio < 0.12 || el.classList.contains('is-in')) return;
         el.classList.add('is-in');
-        io.unobserve(el);
         if (enabled && el.matches('.studio-facts > div')) countUp(el.querySelector('dd'));
       });
     }, { rootMargin: '0px 0px -10% 0px', threshold: 0.12 });
-    watched.forEach((el) => io.observe(el));
+    // Si azzera solo quando è uscito del tutto dallo schermo, così chi guarda non lo vede sparire.
+    const leave = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting || !enabled) return;
+        const el = entry.target;
+        el.classList.toggle('from-above', entry.boundingClientRect.top < 0);
+        el.classList.remove('is-in');
+      });
+    }, { threshold: 0 });
+    watched.forEach((el) => { enter.observe(el); leave.observe(el); });
   } else {
     showAll();
   }
