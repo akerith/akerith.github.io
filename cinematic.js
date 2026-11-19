@@ -22,6 +22,7 @@
     '.feature-kicker', '.feature-text', '.feature .game-links',
     '.promise-list > *', '.studio h2', '.studio-lead', '.studio-links', '.studio-facts > div',
     '.contact h2', '.contact-grid > div', '.footer-top > *',
+    '.play-copy > *', '.feature-play .lightplay',
   ];
   const watched = new Set();
   revealGroups.forEach((selector) => {
@@ -194,8 +195,39 @@
     });
   });
 
+  // Il video del gioco: solo quello adatto allo schermo (telefono finto al computer, sfondo su telefono e tablet),
+  // scaricato solo quando sta per arrivare sullo schermo, fermo fuori dallo schermo, mai a chi risparmia dati.
+  const saveData = !!(navigator.connection && navigator.connection.saveData);
+  const clips = [...document.querySelectorAll('video[data-src]')].map((v) => ({ v, mq: matchMedia(v.dataset.media || 'all'), near: false }));
+  const syncClips = () => clips.forEach((c) => {
+    const { v } = c;
+    const active = c.mq.matches && !saveData;
+    const scene = v.closest('.feature-scene');
+    if (scene) scene.classList.toggle('has-video', active);
+    if (active && c.near) {
+      if (!v.getAttribute('poster')) v.setAttribute('poster', v.dataset.poster);
+      if (enabled && !reduced.matches && !document.hidden) {
+        if (!v.getAttribute('src')) { v.muted = true; v.src = v.dataset.src; }
+        const playing = v.play();
+        if (playing) playing.catch(() => {});
+      } else if (!v.paused) v.pause();
+    } else if (!v.paused) v.pause();
+  });
+  clips.forEach((c) => c.mq.addEventListener('change', syncClips));
+  if ('IntersectionObserver' in window) {
+    const near = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => { clips.find((c) => c.v === entry.target).near = entry.isIntersecting; });
+      syncClips();
+    }, { rootMargin: '400px 0px' });
+    clips.forEach((c) => near.observe(c.v));
+  } else {
+    clips.forEach((c) => { c.near = true; });
+  }
+  document.addEventListener('visibilitychange', syncClips);
+
   const update = () => {
     button.hidden = reduced.matches;
+    syncClips();
     const on = enabled && !reduced.matches;
     if (!on) showAll();
     root.classList.toggle('motion-on', on);
@@ -257,4 +289,178 @@
     observer.observe(hero);
   }
   update();
+})();
+
+// Il mini rompicapo della pagina iniziale: le regole della luce sono quelle di Atlantide (Core/BeamTracer.cs).
+// Un cristallo collega due lati vicini (orientamento o: il lato o e il lato o+1, con N=0 E=1 S=2 O=3);
+// la luce che entra da uno dei due esce dall'altro, da un altro lato si ferma. Un tocco lo gira di un quarto in senso orario.
+(() => {
+  'use strict';
+  const board = document.querySelector('.lightplay');
+  if (!board) return;
+  const panel = board.closest('.feature-play');
+  const cols = Number(board.dataset.cols);
+  const rows = Number(board.dataset.rows);
+  const motion = () => document.documentElement.classList.contains('motion-on');
+  const buzz = (pattern) => { if (motion() && navigator.vibrate) navigator.vibrate(pattern); };
+  const place = (el, cell) => {
+    const [x, y] = cell.split(',').map(Number);
+    el.style.setProperty('--x', x);
+    el.style.setProperty('--y', y);
+  };
+  board.style.setProperty('--cols', cols);
+  board.style.setProperty('--rows', rows);
+
+  const grid = new Map();
+  const [sx, sy, sd] = board.dataset.source.split(',');
+  const source = board.querySelector('.lp-source');
+  place(source, `${sx},${sy}`);
+  const door = board.querySelector('.lp-door');
+  place(door, board.dataset.door);
+  grid.set(board.dataset.door, { type: 'door' });
+  board.dataset.walls.split(/\s+/).filter(Boolean).forEach((cell) => {
+    const wall = document.createElement('span');
+    wall.className = 'lp-wall';
+    wall.setAttribute('aria-hidden', 'true');
+    place(wall, cell);
+    board.insertBefore(wall, source);
+    grid.set(cell, { type: 'wall' });
+  });
+  const crystals = [...board.querySelectorAll('.lp-crystal')].map((el) => {
+    const start = Number(el.dataset.turn);
+    const c = { type: 'crystal', el, start, o: start, turns: 0 };
+    place(el, el.dataset.cell);
+    el.style.setProperty('--a', `${start * 90}deg`);
+    grid.set(el.dataset.cell, c);
+    return c;
+  });
+
+  const DIR = { N: 0, E: 1, S: 2, W: 3 };
+  const STEP = [[0, -1], [1, 0], [0, 1], [-1, 0]];
+  const side = (x, y, s) => [[x + 0.5, y], [x + 1, y + 0.5], [x + 0.5, y + 1], [x, y + 0.5]][s];
+  const beams = [...board.querySelectorAll('.lp-beam path')];
+  const status = panel.querySelector('.lp-status');
+  const movesOut = panel.querySelector('.lp-moves b');
+  const cta = panel.querySelector('.lp-cta');
+  let moves = 0;
+  let won = false;
+  let pending = 0;
+
+  const trace = () => {
+    let x = Number(sx);
+    let y = Number(sy);
+    let d = DIR[sd];
+    let path = `M${x + 0.5} ${y + 0.5}`;
+    const lit = new Set();
+    let end = 'out';
+    let blocked = null;
+    for (let i = 0; i < cols * rows * 4; i++) {
+      const nx = x + STEP[d][0];
+      const ny = y + STEP[d][1];
+      if (nx < 0 || ny < 0 || nx >= cols || ny >= rows) {
+        const p = side(x, y, d);
+        path += ` L${p[0]} ${p[1]}`;
+        break;
+      }
+      const cell = grid.get(`${nx},${ny}`);
+      const entry = (d + 2) % 4;
+      const ep = side(nx, ny, entry);
+      if (cell && cell.type === 'wall') { path += ` L${ep[0]} ${ep[1]}`; end = 'wall'; break; }
+      if (cell && cell.type === 'door') { path += ` L${nx + 0.5} ${ny + 0.5}`; end = 'door'; break; }
+      if (cell && cell.type === 'crystal') {
+        path += ` L${ep[0]} ${ep[1]}`;
+        let exit = -1;
+        if (entry === cell.o) exit = (cell.o + 1) % 4;
+        else if (entry === (cell.o + 1) % 4) exit = cell.o;
+        if (exit < 0 || lit.has(cell)) { end = 'blocked'; blocked = cell; break; }
+        lit.add(cell);
+        const xp = side(nx, ny, exit);
+        const cx = entry === 1 || exit === 1 ? nx + 1 : nx;
+        const cy = entry === 2 || exit === 2 ? ny + 1 : ny;
+        const cross = (ep[0] - cx) * (xp[1] - cy) - (ep[1] - cy) * (xp[0] - cx);
+        path += ` A0.5 0.5 0 0 ${cross > 0 ? 1 : 0} ${xp[0]} ${xp[1]}`;
+        d = exit;
+      }
+      x = nx;
+      y = ny;
+    }
+    return { path, lit, end, blocked };
+  };
+
+  const render = (animate) => {
+    const r = trace();
+    crystals.forEach((c) => c.el.classList.toggle('lit', r.lit.has(c)));
+    beams.forEach((p) => p.setAttribute('d', r.path));
+    if (animate && motion()) {
+      const length = beams[1].getTotalLength();
+      beams.slice(0, 2).forEach((p) => {
+        p.style.transition = 'none';
+        p.style.strokeDasharray = `${length} ${length}`;
+        p.style.strokeDashoffset = `${length}`;
+        p.getBoundingClientRect();
+        p.style.transition = `stroke-dashoffset ${Math.min(0.7, 0.18 + length * 0.045).toFixed(2)}s cubic-bezier(.3,.7,.3,1)`;
+        p.style.strokeDashoffset = '0';
+      });
+    }
+    if (animate && r.blocked) {
+      r.blocked.el.classList.remove('blocked');
+      void r.blocked.el.offsetWidth;
+      r.blocked.el.classList.add('blocked');
+    }
+    return r;
+  };
+
+  const win = () => {
+    won = true;
+    const hadFocus = board.contains(document.activeElement);
+    board.classList.add('won');
+    door.classList.add('open');
+    crystals.forEach((c) => { c.el.disabled = true; });
+    status.textContent = status.dataset.win;
+    cta.hidden = false;
+    if (hadFocus) cta.focus({ preventScroll: true });
+    buzz([18, 70, 34]);
+  };
+
+  const settle = () => {
+    pending = 0;
+    const r = render(true);
+    if (r.end === 'door' && !won) win();
+    else if (moves >= 8 && !won && !status.textContent) status.textContent = status.dataset.hint;
+  };
+
+  crystals.forEach((c) => {
+    c.el.addEventListener('click', () => {
+      if (won) return;
+      c.turns += 1;
+      c.o = (c.start + c.turns) % 4;
+      c.el.style.setProperty('--a', `${(c.start + c.turns) * 90}deg`);
+      moves += 1;
+      movesOut.textContent = String(moves);
+      buzz(8);
+      clearTimeout(pending);
+      pending = setTimeout(settle, motion() ? 200 : 0);
+    });
+  });
+
+  panel.querySelector('.lp-reset').addEventListener('click', () => {
+    clearTimeout(pending);
+    won = false;
+    moves = 0;
+    movesOut.textContent = '0';
+    status.textContent = '';
+    cta.hidden = true;
+    board.classList.remove('won');
+    door.classList.remove('open');
+    crystals.forEach((c) => {
+      c.turns += (4 - (c.turns % 4)) % 4;
+      c.o = c.start;
+      c.el.disabled = false;
+      c.el.style.setProperty('--a', `${(c.start + c.turns) * 90}deg`);
+    });
+    pending = setTimeout(settle, motion() ? 260 : 0);
+  });
+
+  panel.hidden = false;
+  render(false);
 })();

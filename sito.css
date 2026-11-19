@@ -30,6 +30,7 @@ h1, h2, h3 { font-family: var(--serif); font-weight: 400; margin: 0; text-wrap: 
 p { margin: 0 0 1em; }
 .wrap { width: min(1240px, calc(100% - 120px)); margin-inline: auto; }
 .label { margin: 0; font-size: 14px; font-weight: 500; letter-spacing: .02em; color: #dfcaac; }
+[hidden] { display: none !important; }
 .skip { position: fixed; top: -100px; left: 20px; background: var(--text); color: var(--bg); padding: 14px; z-index: 20; }
 .skip:focus { top: 15px; }
 
@@ -269,6 +270,63 @@ p { margin: 0 0 1em; }
 .motion-paused .feature-scene::before, .motion-paused .mote, .motion-paused .beam::after, .motion-paused .feature-shots img { animation-play-state: paused !important; }
 .hero-away .hero-scene *, .tab-hidden * { animation-play-state: paused; }
 
+/* Il video del gioco: al computer dentro un telefono accanto al titolo, su telefono e tablet come sfondo della fascia.
+   Lo script carica solo quello che serve allo schermo di chi guarda, e nessuno dei due a chi risparmia dati. */
+.scene-video { display: none; }
+.feature-phone { position: absolute; right: 3%; top: 50%; z-index: 1; width: clamp(220px, 19vw, 276px); aspect-ratio: 9 / 16; padding: 9px; border-radius: 36px; background: #070909; transform: translateY(-50%); box-shadow: 0 0 0 1px #b39b6a59, 0 60px 100px -34px #000, 0 0 90px #7fdcff24; }
+.feature-phone video { display: block; width: 100%; height: 100%; object-fit: cover; border-radius: 28px; background: #0b0e0e; }
+.feature:nth-of-type(even) .feature-phone { right: auto; left: 3%; }
+.motion-on .feature-phone { opacity: 0; transform: translateY(-38%) rotate(6deg) scale(.92); transition: opacity 1.1s ease .35s, transform 1.5s cubic-bezier(.16,.9,.2,1) .35s; }
+.motion-on .feature.is-in .feature-phone { opacity: 1; transform: translateY(-50%); animation: bob 7s ease-in-out 2s infinite alternate; }
+
+/* Il mini rompicapo: una sorgente, tre cristalli, una porta. Le regole sono quelle del gioco (BeamTracer). */
+.feature-play { position: relative; z-index: 1; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 540px); gap: 80px; align-items: center; margin-top: 170px; }
+.play-copy h4 { margin: 0 0 18px; font: 400 clamp(36px, 3.6vw, 52px)/1.04 var(--serif); letter-spacing: -.02em; color: var(--text); text-wrap: balance; }
+.play-copy > p { margin: 0; max-width: 30em; color: var(--soft); }
+.lp-status { min-height: 3.5em; margin: 22px 0 6px !important; color: var(--text) !important; font-weight: 500; }
+.lp-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 14px 28px; }
+.lp-moves { color: var(--muted); font-size: 15px; }
+.lp-moves b { color: var(--text); font-weight: 500; font-variant-numeric: tabular-nums; }
+.lp-reset { background: none; border: 0; border-bottom: 1px solid #e8a26766; font: inherit; font-size: 15px; font-weight: 500; cursor: pointer; }
+
+.lightplay { --cols: 6; --rows: 5; position: relative; width: 100%; aspect-ratio: 6 / 5; border-radius: 20px; overflow: hidden; touch-action: manipulation; -webkit-tap-highlight-color: transparent; user-select: none; -webkit-user-select: none; background: radial-gradient(ellipse at 15% 25%, #e8a2671a, transparent 55%), radial-gradient(ellipse at 90% 10%, #7fdcff14, transparent 50%), #0f1514; border: 1px solid #b39b6a4d; box-shadow: 0 50px 90px -40px #000, inset 0 0 80px #000b; }
+.lightplay::before { content: ''; position: absolute; inset: 0; pointer-events: none; background-image: linear-gradient(#b39b6a1f 1px, transparent 1px), linear-gradient(90deg, #b39b6a1f 1px, transparent 1px); background-size: calc(100% / var(--cols)) calc(100% / var(--rows)); }
+.lightplay > .lp-crystal, .lightplay > .lp-source, .lightplay > .lp-door, .lightplay > .lp-wall { position: absolute; left: calc(var(--x) * 100% / var(--cols)); top: calc(var(--y) * 100% / var(--rows)); width: calc(100% / var(--cols)); height: calc(100% / var(--rows)); }
+.lp-beam { position: absolute; inset: 0; z-index: 3; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
+.lp-beam path { fill: none; stroke-linecap: round; stroke-linejoin: round; }
+.lp-glow { stroke: #ffc47e; stroke-width: .34; opacity: .28; }
+.lp-core { stroke: #fff4de; stroke-width: .075; }
+.lp-flow { stroke: #ffffff; stroke-width: .05; stroke-dasharray: .1 .45; opacity: 0; }
+.motion-on .lp-flow { opacity: .9; animation: lp-flow 1.1s linear infinite; }
+@keyframes lp-flow { to { stroke-dashoffset: -.55; } }
+
+.lp-source::before { content: ''; position: absolute; inset: 24%; border-radius: 50%; background: radial-gradient(circle, #fff 0, #ffe2b0 30%, #e8a267 58%, #e8a26700 72%); box-shadow: 0 0 26px #e8a267b0; }
+.motion-on .lp-source::before { animation: lp-pulse 2.4s ease-in-out infinite alternate; }
+@keyframes lp-pulse { to { transform: scale(1.12); box-shadow: 0 0 40px #ffc47ed0; } }
+.lp-wall::before { content: ''; position: absolute; inset: 9%; border-radius: 9px; background: linear-gradient(160deg, #474438, #23241f 70%); box-shadow: inset 0 2px 0 #ffffff17, 0 10px 16px -6px #000c; }
+
+.lp-crystal { z-index: 2; padding: 0; border: 0; background: none; cursor: pointer; color: inherit; }
+.lp-crystal:disabled { cursor: default; }
+.lp-crystal:focus-visible { outline: 2px solid var(--light); outline-offset: -3px; border-radius: 12px; }
+.lp-gem { position: absolute; inset: 0; overflow: hidden; transform: rotate(var(--a, 0deg)); transition: transform .42s cubic-bezier(.3,1.45,.55,1); }
+.lp-gem::before { content: ''; position: absolute; inset: 31%; border-radius: 5px; transform: rotate(45deg); background: linear-gradient(135deg, #e6fbff, #78d4ef 42%, #1f6f8a); box-shadow: 0 0 18px #7fdcff70; opacity: .9; }
+.lp-gem::after { content: ''; position: absolute; left: 50%; top: -50%; width: 100%; height: 100%; box-sizing: border-box; border-radius: 50%; border: 4px solid #e8a26780; box-shadow: 0 0 10px #e8a26740, inset 0 0 10px #e8a26740; transition: border-color .3s, box-shadow .3s; }
+.lp-crystal.lit .lp-gem::after { border-color: #fff1d6; box-shadow: 0 0 14px #ffc47e, inset 0 0 14px #ffc47e; }
+.lp-crystal.blocked .lp-gem::before { animation: lp-knock .45s ease; }
+@keyframes lp-knock { 40% { box-shadow: 0 0 34px #ffc47e; filter: brightness(1.5); } }
+@media (hover: hover) { .lp-crystal:not(:disabled):hover .lp-gem::before { filter: brightness(1.25); } }
+
+.lp-door::before { content: ''; position: absolute; inset: 12% 16% 4%; border: 2px solid #b39b6a; border-bottom: 0; border-radius: 50% 50% 0 0 / 34% 34% 0 0; box-shadow: 0 0 14px #b39b6a40; transition: border-color .6s, box-shadow .6s; }
+.lp-door::after { content: ''; position: absolute; inset: -40%; border-radius: 50%; background: radial-gradient(circle, #fff6e2, #ffc47e88 30%, transparent 62%); opacity: 0; transform: scale(.4); transition: opacity .8s ease .25s, transform 1.2s cubic-bezier(.2,.8,.2,1) .25s; pointer-events: none; }
+.lp-door i { position: absolute; top: 24%; bottom: 4%; width: 31%; background: linear-gradient(180deg, #5d4c33, #2b241a); box-shadow: inset 0 0 0 1px #b39b6a55; transition: transform 1s cubic-bezier(.6,0,.2,1) .2s, opacity 1s ease .2s; }
+.lp-door i:first-child { left: 19%; border-radius: 40% 0 0 0 / 22% 0 0 0; }
+.lp-door i:last-child { right: 19%; border-radius: 0 40% 0 0 / 0 22% 0 0; }
+.lp-door.open::before { border-color: #ffe2b0; box-shadow: 0 0 22px #ffc47e; }
+.lp-door.open::after { opacity: 1; transform: scale(1); }
+.lp-door.open i:first-child { transform: translateX(-70%); opacity: 0; }
+.lp-door.open i:last-child { transform: translateX(70%); opacity: 0; }
+.lightplay.won { box-shadow: 0 50px 90px -40px #000, inset 0 0 80px #000b, 0 0 0 1px #ffc47e66, 0 0 60px #e8a26733; transition: box-shadow 1s; }
+
 @media (max-width: 1100px) {
   .wrap { width: calc(100% - 72px); }
   .menu { gap: 24px; }
@@ -279,6 +337,18 @@ p { margin: 0 0 1em; }
   .studio h2 { font-size: 48px; }
   .contact-grid { gap: 45px; }
   .feature-list { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 1000px) {
+  .feature-phone { display: none; }
+  .scene-video { display: block; position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 38%; }
+  .feature-scene.has-video img { display: none; }
+  /* Su schermo stretto il messaggio e i pulsanti vanno sotto il rompicapo, dove si sta guardando quando la porta si apre */
+  .feature-play { grid-template-columns: 1fr; gap: 0; margin-top: 110px; }
+  .play-copy { display: contents; }
+  .play-copy > p:not(.lp-status) { margin-bottom: 28px; }
+  .lightplay { order: 1; max-width: 560px; }
+  .lp-status { order: 2; margin-top: 20px !important; }
+  .lp-actions { order: 3; }
 }
 @media (max-width: 700px) {
   body { font-size: 16px; }
@@ -316,6 +386,15 @@ p { margin: 0 0 1em; }
   .feature-shots img:nth-child(even) { margin-top: 0; }
   .motion-on .feature-shots { transform: none; }
   .feature-motes { height: 600px; }
+  .feature-scene.has-video { height: min(178vw, 820px); }
+  .feature-scene.has-video::after { background: linear-gradient(180deg, var(--bg) 0, #0b0e0e00 14%, #0b0e0e00 40%, #0b0e0eb3 62%, var(--bg) 88%); }
+  .feature-scene.has-video + .feature-motes { height: min(178vw, 820px); }
+  .feature-scene.has-video ~ .feature-content { min-height: 0; padding-top: min(98vw, 470px); justify-content: flex-start; }
+  .feature-play { margin-top: 70px; }
+  .play-copy h4 { font-size: clamp(32px, 9vw, 42px); }
+  .lightplay { border-radius: 16px; }
+  .lp-gem::after { border-width: 3px; }
+  .lp-status { min-height: 0; }
   .promise { grid-template-columns: 1fr; gap: 30px; padding-top: 64px; padding-bottom: 60px; }
   .studio { padding: 58px 0; }
   .studio-grid { grid-template-columns: 1fr; gap: 20px; }
