@@ -281,7 +281,7 @@ p { margin: 0 0 1em; }
 
 /* Il mini rompicapo: una sorgente, tre cristalli, una porta. Le regole sono quelle del gioco (BeamTracer). */
 .feature-play { position: relative; z-index: 1; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 540px); gap: 80px; align-items: center; margin-top: 170px; }
-.play-copy h4 { margin: 0 0 18px; font: 400 clamp(36px, 3.6vw, 52px)/1.04 var(--serif); letter-spacing: -.02em; color: var(--text); text-wrap: balance; }
+.play-title { margin: 0 0 18px; font: 400 clamp(36px, 3.6vw, 52px)/1.04 var(--serif); letter-spacing: -.02em; color: var(--text); text-wrap: balance; }
 .play-copy > p { margin: 0; max-width: 30em; color: var(--soft); }
 .lp-status { min-height: 3.5em; margin: 22px 0 6px !important; color: var(--text) !important; font-weight: 500; }
 .lp-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 14px 28px; }
@@ -326,6 +326,38 @@ p { margin: 0 0 1em; }
 .lp-door.open i:first-child { transform: translateX(-70%); opacity: 0; }
 .lp-door.open i:last-child { transform: translateX(70%); opacity: 0; }
 .lightplay.won { box-shadow: 0 50px 90px -40px #000, inset 0 0 80px #000b, 0 0 0 1px #ffc47e66, 0 0 60px #e8a26733; transition: box-shadow 1s; }
+
+/* Da una pagina all'altra: la vecchia si scioglie, la nuova affiora (browser che lo sanno fare; gli altri cambiano pagina come sempre) */
+@view-transition { navigation: auto; }
+::view-transition-old(root) { animation: vt-out .32s cubic-bezier(.4,0,1,1) both; }
+::view-transition-new(root) { animation: vt-in .6s cubic-bezier(0,0,.2,1) both; }
+@keyframes vt-out { to { opacity: 0; filter: blur(6px); transform: scale(.985); } }
+@keyframes vt-in { from { opacity: 0; filter: blur(8px); transform: scale(1.015); } }
+
+/* Col mouse, una luce calda segue il puntatore (solo computer, solo con le animazioni accese) */
+.pointer-light { position: fixed; left: 0; top: 0; z-index: 6; width: 620px; height: 620px; margin: -310px 0 0 -310px; border-radius: 50%; pointer-events: none; background: radial-gradient(circle, #ffc47e1c, #e8a2670b 38%, transparent 66%); mix-blend-mode: screen; opacity: 0; transition: opacity .6s ease; will-change: transform; }
+.motion-on .pointer-light.on { opacity: 1; }
+
+/* La pagina di un gioco apre con la stessa fascia della pagina iniziale */
+.feature--page { padding-top: 10px; }
+.feature--page .feature-content { min-height: 600px; }
+.feature--page .feature-play { margin-top: 130px; }
+.play-title { color: var(--text); }
+
+/* Pagina non trovata: una porta chiusa, con un filo di luce che passa dalla fessura */
+.lost { padding-block: 70px 110px; text-align: center; }
+.lost h1 { font-size: clamp(42px, 6vw, 76px); line-height: 1.02; letter-spacing: -.02em; margin-top: 46px; }
+.lost .lead { margin-inline: auto; max-width: 32em; }
+.lost-actions { margin: 34px 0 30px; }
+.lost-en { font-size: 15px !important; color: var(--muted) !important; }
+.lost-door { position: relative; width: 190px; height: 270px; margin: 0 auto; border: 2px solid #b39b6a; border-bottom: 0; border-radius: 95px 95px 0 0; box-shadow: 0 0 40px #b39b6a33, inset 0 0 40px #000; background: #0f1312; overflow: hidden; }
+.lost-door i { position: absolute; top: 0; bottom: 0; width: 50%; background: linear-gradient(180deg, #4d3f2b, #231d15); box-shadow: inset 0 0 0 1px #b39b6a40; }
+.lost-door i:first-child { left: 0; border-radius: 95px 0 0 0; }
+.lost-door i:last-child { right: 0; border-radius: 0 95px 0 0; }
+.lost-crack { position: absolute; left: 50%; top: 8%; bottom: 0; width: 2px; margin-left: -1px; background: linear-gradient(180deg, transparent, #ffe2b0 30%, #fff6e2 60%, #ffc47e); box-shadow: 0 0 12px #ffc47e, 0 0 30px #e8a267aa; }
+.lost-dust { position: absolute; inset: auto 0 0 0; height: 60%; background: radial-gradient(ellipse at 50% 100%, #ffc47e40, transparent 60%); }
+.motion-on .lost-crack, .lost-page .lost-crack { animation: crack 3.2s ease-in-out infinite alternate; }
+@keyframes crack { from { opacity: .55; box-shadow: 0 0 8px #ffc47e, 0 0 18px #e8a26766; } to { opacity: 1; box-shadow: 0 0 16px #ffd9a8, 0 0 44px #e8a267cc; } }
 
 @media (max-width: 1100px) {
   .wrap { width: calc(100% - 72px); }
@@ -386,12 +418,15 @@ p { margin: 0 0 1em; }
   .feature-shots img:nth-child(even) { margin-top: 0; }
   .motion-on .feature-shots { transform: none; }
   .feature-motes { height: 600px; }
+  .feature--page .feature-content { min-height: 420px; }
+  .lost { padding-block: 40px 70px; }
+  .lost-door { width: 150px; height: 214px; }
   .feature-scene.has-video { height: min(178vw, 820px); }
   .feature-scene.has-video::after { background: linear-gradient(180deg, var(--bg) 0, #0b0e0e00 14%, #0b0e0e00 40%, #0b0e0eb3 62%, var(--bg) 88%); }
   .feature-scene.has-video + .feature-motes { height: min(178vw, 820px); }
   .feature-scene.has-video ~ .feature-content { min-height: 0; padding-top: min(98vw, 470px); justify-content: flex-start; }
   .feature-play { margin-top: 70px; }
-  .play-copy h4 { font-size: clamp(32px, 9vw, 42px); }
+  .play-title { font-size: clamp(32px, 9vw, 42px); }
   .lightplay { border-radius: 16px; }
   .lp-gem::after { border-width: 3px; }
   .lp-status { min-height: 0; }
@@ -435,6 +470,8 @@ p { margin: 0 0 1em; }
 }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
+  @view-transition { navigation: none; }
+  .pointer-light { display: none; }
   *, *::before, *::after { animation: none !important; transition: none !important; }
   .hero-art { transform: none !important; }
   .ember, .mote, .feature-scene::before, .beam::after { display: none; }

@@ -10,12 +10,12 @@
 <link rel="preload" href="/assets/fonts/latin-0.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/assets/fonts/latin-1.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/assets/fonts/fonts.css">
-<link rel="stylesheet" href="/sito.css?v=6e5c5bf9">
+<link rel="stylesheet" href="/sito.css?v=a970b768">
 <link rel="icon" href="/favicon.ico" sizes="48x48">
 <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
 <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
 </head>
-<body>
+<body class="lost-page">
 <a class="skip" href="#contenuto">Vai al contenuto</a>
 <header class="header wrap">
   <a class="brand" href="/" aria-label="LSGames Studio, pagina iniziale"><img src="/assets/marchio/logo-orizzontale-scuro.svg" alt="LSGames Studio" width="208" height="52"></a>
@@ -23,10 +23,12 @@
   
 </header>
 <main id="contenuto">
-<section class="page-head wrap">
-  <h1>Questa pagina non c’è.</h1>
-  <p class="lead">L’indirizzo è sbagliato, oppure la pagina è stata spostata. <a href="/">Torna alla pagina iniziale</a>.</p>
-  <p class="lead" lang="en">This page does not exist: the address is wrong, or the page has moved. <a href="/en/">Go to the home page</a>.</p>
+<section class="lost wrap" aria-labelledby="perso">
+  <div class="lost-door" aria-hidden="true"><i></i><i></i><span class="lost-crack"></span><span class="lost-dust"></span></div>
+  <h1 id="perso">Questa porta è chiusa.</h1>
+  <p class="lead">L’indirizzo è sbagliato, oppure la pagina è stata spostata.</p>
+  <p class="lost-actions"><a class="button button--store" href="/">Torna alla pagina iniziale</a></p>
+  <p class="lead lost-en" lang="en">This door is closed: the address is wrong, or the page has moved. <a href="/en/">Go to the home page</a>.</p>
 </section>
 </main>
 <footer class="footer">

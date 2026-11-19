@@ -1,10 +1,14 @@
 (() => {
   'use strict';
-  const hero = document.querySelector('.hero');
-  if (!hero) return;
+  // Le pagine senza apertura (quella di un gioco, per esempio) hanno lo stesso movimento: al posto dell'apertura
+  // e del pulsante "Ferma le animazioni" mancanti si usano elementi vuoti fuori dalla pagina, così il resto non cambia.
+  const hero = document.querySelector('.hero') || document.createElement('div');
+  if (!document.querySelector('.hero') && !document.querySelector('.feature, .lightplay')) return;
   const root = document.documentElement;
   const body = document.body;
-  const button = document.querySelector('.motion-toggle');
+  const spare = document.createElement('button');
+  spare.innerHTML = '<span class="motion-icon"></span><span class="motion-label"></span>';
+  const button = document.querySelector('.motion-toggle') || spare;
   const label = button.querySelector('.motion-label');
   const icon = button.querySelector('.motion-icon');
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
@@ -23,6 +27,7 @@
     '.promise-list > *', '.studio h2', '.studio-lead', '.studio-links', '.studio-facts > div',
     '.contact h2', '.contact-grid > div', '.footer-top > *',
     '.play-copy > *', '.feature-play .lightplay',
+    '.game .inside h2', '.game .feature-list li', '.game .shots img', '.game .prose > *',
   ];
   const watched = new Set();
   revealGroups.forEach((selector) => {
@@ -225,6 +230,29 @@
   }
   document.addEventListener('visibilitychange', syncClips);
 
+  // Col mouse, una luce calda segue il puntatore nelle zone scure (solo computer).
+  if (finePointer.matches && matchMedia('(hover: hover)').matches) {
+    const glow = document.createElement('div');
+    glow.className = 'pointer-light';
+    glow.setAttribute('aria-hidden', 'true');
+    body.appendChild(glow);
+    let gx = 0;
+    let gy = 0;
+    let glowFrame = 0;
+    addEventListener('pointermove', (event) => {
+      if (event.pointerType !== 'mouse' || !enabled) return;
+      gx = event.clientX;
+      gy = event.clientY;
+      if (glowFrame) return;
+      glowFrame = requestAnimationFrame(() => {
+        glowFrame = 0;
+        glow.style.transform = `translate3d(${gx}px, ${gy}px, 0)`;
+        glow.classList.add('on');
+      });
+    }, { passive: true });
+    document.documentElement.addEventListener('pointerleave', () => glow.classList.remove('on'));
+  }
+
   const update = () => {
     button.hidden = reduced.matches;
     syncClips();
@@ -259,7 +287,7 @@
     particle.style.setProperty('--drift', `${(i % 2 ? 1 : -1) * (12 + i * 2)}px`);
     fragment.appendChild(particle);
   }
-  particles.appendChild(fragment);
+  if (particles) particles.appendChild(fragment);
 
   hero.addEventListener('pointermove', (event) => {
     if (!enabled || reduced.matches || !finePointer.matches || !visible || frame) return;
@@ -417,8 +445,8 @@
     door.classList.add('open');
     crystals.forEach((c) => { c.el.disabled = true; });
     status.textContent = status.dataset.win;
-    cta.hidden = false;
-    if (hadFocus) cta.focus({ preventScroll: true });
+    if (cta) cta.hidden = false;
+    if (hadFocus) (cta || panel.querySelector('.lp-reset')).focus({ preventScroll: true });
     buzz([18, 70, 34]);
   };
 
@@ -449,7 +477,7 @@
     moves = 0;
     movesOut.textContent = '0';
     status.textContent = '';
-    cta.hidden = true;
+    if (cta) cta.hidden = true;
     board.classList.remove('won');
     door.classList.remove('open');
     crystals.forEach((c) => {
