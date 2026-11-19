@@ -1,55 +1,55 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
-  <url><loc>https://akerith.github.io/</loc>
-    <xhtml:link rel="alternate" hreflang="it" href="https://akerith.github.io/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://akerith.github.io/en/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://akerith.github.io/en/"/>
+  <url><loc>https://lsgamesstudio.it/</loc>
+    <xhtml:link rel="alternate" hreflang="it" href="https://lsgamesstudio.it/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://lsgamesstudio.it/en/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://lsgamesstudio.it/en/"/>
   </url>
-  <url><loc>https://akerith.github.io/en/</loc>
-    <xhtml:link rel="alternate" hreflang="it" href="https://akerith.github.io/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://akerith.github.io/en/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://akerith.github.io/en/"/>
+  <url><loc>https://lsgamesstudio.it/en/</loc>
+    <xhtml:link rel="alternate" hreflang="it" href="https://lsgamesstudio.it/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://lsgamesstudio.it/en/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://lsgamesstudio.it/en/"/>
   </url>
-  <url><loc>https://akerith.github.io/regole/</loc>
-    <xhtml:link rel="alternate" hreflang="it" href="https://akerith.github.io/regole/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://akerith.github.io/en/rules/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://akerith.github.io/en/rules/"/>
+  <url><loc>https://lsgamesstudio.it/regole/</loc>
+    <xhtml:link rel="alternate" hreflang="it" href="https://lsgamesstudio.it/regole/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://lsgamesstudio.it/en/rules/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://lsgamesstudio.it/en/rules/"/>
   </url>
-  <url><loc>https://akerith.github.io/en/rules/</loc>
-    <xhtml:link rel="alternate" hreflang="it" href="https://akerith.github.io/regole/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://akerith.github.io/en/rules/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://akerith.github.io/en/rules/"/>
+  <url><loc>https://lsgamesstudio.it/en/rules/</loc>
+    <xhtml:link rel="alternate" hreflang="it" href="https://lsgamesstudio.it/regole/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://lsgamesstudio.it/en/rules/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://lsgamesstudio.it/en/rules/"/>
   </url>
-  <url><loc>https://akerith.github.io/studio/</loc>
-    <xhtml:link rel="alternate" hreflang="it" href="https://akerith.github.io/studio/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://akerith.github.io/en/studio/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://akerith.github.io/en/studio/"/>
+  <url><loc>https://lsgamesstudio.it/studio/</loc>
+    <xhtml:link rel="alternate" hreflang="it" href="https://lsgamesstudio.it/studio/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://lsgamesstudio.it/en/studio/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://lsgamesstudio.it/en/studio/"/>
   </url>
-  <url><loc>https://akerith.github.io/en/studio/</loc>
-    <xhtml:link rel="alternate" hreflang="it" href="https://akerith.github.io/studio/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://akerith.github.io/en/studio/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://akerith.github.io/en/studio/"/>
+  <url><loc>https://lsgamesstudio.it/en/studio/</loc>
+    <xhtml:link rel="alternate" hreflang="it" href="https://lsgamesstudio.it/studio/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://lsgamesstudio.it/en/studio/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://lsgamesstudio.it/en/studio/"/>
   </url>
-  <url><loc>https://akerith.github.io/stampa/</loc>
-    <xhtml:link rel="alternate" hreflang="it" href="https://akerith.github.io/stampa/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://akerith.github.io/en/press/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://akerith.github.io/en/press/"/>
+  <url><loc>https://lsgamesstudio.it/stampa/</loc>
+    <xhtml:link rel="alternate" hreflang="it" href="https://lsgamesstudio.it/stampa/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://lsgamesstudio.it/en/press/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://lsgamesstudio.it/en/press/"/>
   </url>
-  <url><loc>https://akerith.github.io/en/press/</loc>
-    <xhtml:link rel="alternate" hreflang="it" href="https://akerith.github.io/stampa/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://akerith.github.io/en/press/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://akerith.github.io/en/press/"/>
+  <url><loc>https://lsgamesstudio.it/en/press/</loc>
+    <xhtml:link rel="alternate" hreflang="it" href="https://lsgamesstudio.it/stampa/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://lsgamesstudio.it/en/press/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://lsgamesstudio.it/en/press/"/>
   </url>
-  <url><loc>https://akerith.github.io/atlantide/</loc>
-    <xhtml:link rel="alternate" hreflang="it" href="https://akerith.github.io/atlantide/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://akerith.github.io/en/atlantide/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://akerith.github.io/en/atlantide/"/>
+  <url><loc>https://lsgamesstudio.it/atlantide/</loc>
+    <xhtml:link rel="alternate" hreflang="it" href="https://lsgamesstudio.it/atlantide/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://lsgamesstudio.it/en/atlantide/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://lsgamesstudio.it/en/atlantide/"/>
   </url>
-  <url><loc>https://akerith.github.io/en/atlantide/</loc>
-    <xhtml:link rel="alternate" hreflang="it" href="https://akerith.github.io/atlantide/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://akerith.github.io/en/atlantide/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://akerith.github.io/en/atlantide/"/>
+  <url><loc>https://lsgamesstudio.it/en/atlantide/</loc>
+    <xhtml:link rel="alternate" hreflang="it" href="https://lsgamesstudio.it/atlantide/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://lsgamesstudio.it/en/atlantide/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://lsgamesstudio.it/en/atlantide/"/>
   </url>
-  <url><loc>https://akerith.github.io/atlantide/privacy.html</loc>
+  <url><loc>https://lsgamesstudio.it/atlantide/privacy.html</loc>
   </url>
 </urlset>
