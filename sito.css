@@ -476,3 +476,162 @@ p { margin: 0 0 1em; }
   .hero-art { transform: none !important; }
   .ember, .mote, .feature-scene::before, .beam::after { display: none; }
 }
+
+/* Anteprima: conserva la demo originale e disegna i pezzi con gli sprite del gioco. */
+.lightplay {
+  background: #10363b url('assets/puzzle/floor_a.png') 0 0 /
+    calc(100% / var(--cols)) calc(100% / var(--rows)) repeat;
+}
+.lightplay::before {
+  background-image: linear-gradient(#a2c8c218 1px, transparent 1px),
+    linear-gradient(90deg, #a2c8c218 1px, transparent 1px);
+}
+.lp-source::before, .lp-wall::before, .lp-door::before, .lp-gem::before {
+  inset: 5%;
+  border: 0;
+  border-radius: 0;
+  background: center / contain no-repeat;
+  box-shadow: none;
+}
+.lp-source::before { background-image: url('assets/puzzle/source.png'); transform: rotate(90deg); }
+.lp-wall::before { background-image: url('assets/puzzle/wall.png'); }
+.lp-door::before { background-image: url('assets/puzzle/door_closed.png'); }
+.lp-door.open::before { background-image: url('assets/puzzle/door_open.png'); box-shadow: none; }
+.lp-door.open::after { opacity: .32; }
+.lp-door i, .lp-gem::after { display: none; }
+.lp-gem::before { inset: 2%; background-image: url('assets/puzzle/deflector.png'); transform: none; opacity: 1; }
+.lp-crystal.lit .lp-gem::before { filter: brightness(1.15) drop-shadow(0 0 5px #58ebdc70); }
+.lp-glow { stroke: #42dedf; }
+.lp-core { stroke: #d6ffff; }
+
+@media (max-width: 480px) {
+  .header { padding-top: 12px; gap: 2px 12px; }
+  .brand img { width: 158px; }
+  .menu { column-gap: 4px; }
+  .menu a { padding-block: 9px; min-height: 44px; }
+  .hero { --art-height: clamp(270px, 78vw, 360px); }
+  .hero-content { padding-top: 128px; padding-bottom: var(--art-height); }
+  .hero-description { margin-block: 18px 22px; }
+  .hero-art {
+    height: var(--art-height);
+    background-size: auto 100%;
+    background-position: 80% bottom;
+  }
+  .hero::after {
+    background: linear-gradient(180deg, var(--bg) calc(100% - var(--art-height)),
+      transparent calc(100% - var(--art-height) + 48px), transparent 92%, var(--bg));
+  }
+  .hero-actions { gap: 8px 17px; }
+}
+@media (max-width: 355px) {
+  .header.wrap { width: calc(100% - 20px); }
+  .menu { column-gap: 2px; }
+}
+
+/* La luce segue il profilo dello sprite anche durante la pulsazione. */
+.motion-on .lp-source::before { animation-name: puzzle-source-pulse; }
+@keyframes puzzle-source-pulse {
+  from { filter: drop-shadow(0 0 2px #5cdad96b); }
+  to { filter: brightness(1.12) drop-shadow(0 0 6px #5cdad9a8); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .motion-on .lp-source::before { animation: none; }
+}
+@media (max-width: 480px) {
+  .motion-toggle { color: var(--text); background-color: #0b0e0ecc; padding-inline: 10px; opacity: 1; }
+  .hero-bottom { bottom: 4px; }
+}
+
+/* I due fondali sono composti per lasciare il testo nella zona d'ombra. */
+.hero-art { background-image: url('assets/porte/marea-illustrata.webp'); }
+@media (min-width: 701px) {
+  .hero::after {
+    background: linear-gradient(90deg, #080c0dd4 0%, #080c0da1 31%, #080c0d33 53%, transparent 69%),
+      linear-gradient(0deg, var(--bg), transparent 18%, transparent 84%, #080c0d8c);
+  }
+  .hero-description { max-width: min(28em, 43vw); }
+}
+@media (min-width: 1001px) {
+  .feature-text { max-width: min(27em, 41vw); }
+  .feature-scene::after {
+    background: linear-gradient(90deg,#090f11f0 2%,#090f11dd 33%,#08171b80 46%,transparent 73%),
+      linear-gradient(180deg,var(--bg),transparent 15%,transparent 61%,var(--bg));
+  }
+}
+ .feature-phone { background: linear-gradient(140deg,#42504e,#111817 24%,#060909 70%,#303c3d); }
+.feature-phone::before { content: ''; position: absolute; inset: 9px; border-radius: 28px; background: url('assets/atlantide-flow.webp') center / cover; }
+.feature-phone video { position: relative; }
+.feature-phone video, .scene-video { background: #0c1920 url('assets/atlantide-flow.webp') center / cover; }
+.feature-phone video.poster-only { opacity: 0; }
+.lp-source::before { transform: rotate(var(--source-angle,90deg)); }
+.play-copy .lp-chapter { font: 500 .84rem/1.5 var(--sans); color: var(--light); letter-spacing: .08em; margin-bottom: 14px; }
+.lp-next { font-family: var(--sans); cursor: pointer; }
+.lp-status:empty { min-height: 0; margin: 0 !important; }
+.lp-actions { margin-top: 22px; }
+
+/* Il movimento accompagna il cambio di scena, mentre il testo resta a fuoco. */
+@media (prefers-reduced-motion: no-preference) {
+  .motion-on .reveal { transform: translateY(18px); filter: none; transition: opacity .55s ease var(--d,0s), transform .68s cubic-bezier(.2,.72,.2,1) var(--d,0s); }
+  .motion-on .reveal.from-above:not(.is-in) { transform: translateY(-14px); }
+  .motion-on .reveal.is-in { transform: none; }
+  .motion-on .feature-title .ch { filter: none; transform: translateY(.24em); transition: opacity .45s ease calc(var(--i)*25ms),transform .65s cubic-bezier(.2,.8,.2,1) calc(var(--i)*25ms); }
+  .motion-on .feature.is-in .feature-title .ch { transform: none; }
+  .motion-on .feature-shots:not(.is-in) img { transform: translateY(24px); }
+  .motion-on .feature-shots.is-in img { animation: none; }
+  .motion-on .feature.is-in .feature-phone { animation: none; }
+  .motion-on .feature-phone { transition: opacity .55s ease,transform .8s cubic-bezier(.2,.76,.2,1); }
+  .motion-on .feature-scene img { transform: translateY(calc(var(--fp,0) * -19px)) scale(1.045); }
+  .page-head h1, .page-head .lead { animation: page-arrive .52s cubic-bezier(.22,.75,.24,1) both; }
+  .page-head .lead { animation-delay: .08s; }
+  @keyframes page-arrive { from { opacity: .25; transform: translateY(10px); } }
+  ::view-transition-old(root) { animation: scene-out .17s ease both; }
+  ::view-transition-new(root) { animation: scene-in .3s ease both; }
+  @keyframes scene-out { to { opacity: 0; } }
+  @keyframes scene-in { from { opacity: 0; } }
+}
+
+/* Variante tipografica facoltativa per il confronto del titolo. */
+.hero-type-manrope .hero h1 {
+  font-family: var(--sans);
+  font-size: clamp(45px, 4.7vw, 78px);
+  font-weight: 500;
+  line-height: 1.08;
+  letter-spacing: -.045em;
+}
+@media (max-width: 700px) {
+  .hero-type-manrope .hero h1 { font-size: clamp(30px, 8.5vw, 48px); }
+}
+
+/* Composizione della prima schermata: una colonna di lettura di fronte alla porta. */
+.home .hero-description .hero-lead { display: block; color: var(--text); margin-bottom: .35em; }
+@media (min-width: 701px) {
+  .home .hero { display: grid; align-items: center; }
+  .home .hero-content { padding-block: clamp(96px, 12vh, 132px) 30px; }
+  .home .hero-description { max-width: min(40vw, 30em); margin: clamp(19px, 2vw, 32px) 0 clamp(24px, 2.4vw, 38px); line-height: 1.55; }
+  .home .hero-actions { gap: clamp(20px, 2.5vw, 36px); }
+  .home .games { padding-top: clamp(68px, 7vw, 110px); }
+}
+@media (min-width: 701px) and (max-width: 930px) {
+  .home .hero h1 { font-size: clamp(42px, 6.2vw, 56px); }
+  .home .header { gap: 18px; }
+  .home .header .brand img { width: 155px; }
+  .home .menu { gap: 13px; }
+}
+@media (max-width: 700px) {
+  .home .hero { --art-height: clamp(248px, 70vw, 375px); }
+  .home .hero-content { padding-block: 126px var(--art-height); }
+  .home .hero-art { height: var(--art-height); background-size: auto 100%; background-position: 80% bottom; }
+  .home .hero::after { background: linear-gradient(180deg,var(--bg) calc(100% - var(--art-height)),transparent calc(100% - var(--art-height) + 44px),transparent 92%,var(--bg)); }
+  .home .hero-description { max-width: 32em; margin: 16px 0 20px; line-height: 1.52; }
+  .home .hero-actions { column-gap: 19px; row-gap: 8px; }
+  .home .games { padding-top: 44px; }
+}
+@media (min-width: 481px) and (max-width: 700px) {
+  .home .hero-content { padding-top: 150px; }
+}
+.home main { overflow-x: clip; }
+
+
+.loop-cover { position: absolute; inset: 0; pointer-events: none; opacity: 0; background: #000; }
+.feature-phone .loop-cover { inset: 9px; border-radius: 28px; background-position: center; }
+.feature-scene.has-video::before { display: none; }

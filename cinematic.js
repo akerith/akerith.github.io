@@ -34,7 +34,7 @@
     document.querySelectorAll(selector).forEach((el) => {
       const index = Array.prototype.indexOf.call(el.parentElement.children, el);
       el.classList.add('reveal');
-      el.style.setProperty('--d', `${Math.min(index, 5) * 0.12}s`);
+      el.style.setProperty('--d', `${Math.min(index, 4) * 0.065}s`);
       watched.add(el);
     });
   });
@@ -209,16 +209,63 @@
     const active = c.mq.matches && !saveData;
     const scene = v.closest('.feature-scene');
     if (scene) scene.classList.toggle('has-video', active);
-    if (active && c.near) {
-      if (!v.getAttribute('poster')) v.setAttribute('poster', v.dataset.poster);
+    if (active && c.near && !c.loopHold) {
+
       if (enabled && !reduced.matches && !document.hidden) {
-        if (!v.getAttribute('src')) { v.muted = true; v.src = v.dataset.src; }
+        if (!v.getAttribute('src')) { v.muted = true; v.src = v.canPlayType('video/mp4; codecs="avc1.42E01E"') ? v.dataset.src : v.dataset.webm; }
         const playing = v.play();
-        if (playing) playing.catch(() => {});
+        if (playing) playing.catch(() => { if (v.readyState < 2) v.classList.add('poster-only'); });
       } else if (!v.paused) v.pause();
     } else if (!v.paused) v.pause();
   });
-  clips.forEach((c) => c.mq.addEventListener('change', syncClips));
+  clips.forEach((c) => {
+    const { v, mq } = c;
+    mq.addEventListener('change', syncClips);
+    if (v.hasAttribute('data-loop-pause')) {
+      const cover = document.createElement('span');
+      cover.className = 'loop-cover';
+      v.after(cover);
+      v.loop = false;
+      let repeat = false;
+      let frame = 0;
+      const shadeFrame = () => {
+        frame = 0;
+        if (v.paused || c.loopHold) return;
+        const fadeOut = 1 - (v.duration - v.currentTime) / 1.2;
+        const fadeIn = repeat ? 1 - v.currentTime / 1.05 : 0;
+        const x = Math.max(0, Math.min(1, Math.max(fadeOut, fadeIn)));
+        const opacity = String(x * x * (3 - 2 * x));
+        if (cover.style.opacity !== opacity) cover.style.opacity = opacity;
+        frame = requestAnimationFrame(shadeFrame);
+      };
+      v.addEventListener('playing', () => {
+        if (!frame) shadeFrame();
+      });
+      v.addEventListener('pause', () => {
+        cancelAnimationFrame(frame);
+        frame = 0;
+      });
+      v.addEventListener('ended', () => {
+        repeat = true;
+        c.loopHold = true;
+        cover.style.opacity = '1';
+        v.currentTime = 0;
+        setTimeout(() => {
+          c.loopHold = false;
+          syncClips();
+        }, 2000);
+      });
+    }
+    v.addEventListener('playing', () => v.classList.remove('poster-only'));
+    v.addEventListener('error', () => {
+      if (!v.src.endsWith('.webm') && v.canPlayType('video/webm')) {
+        v.src = v.dataset.webm;
+        syncClips();
+      } else {
+        v.classList.add('poster-only');
+      }
+    });
+  });
   if ('IntersectionObserver' in window) {
     const near = new IntersectionObserver((entries) => {
       entries.forEach((entry) => { clips.find((c) => c.v === entry.target).near = entry.isIntersecting; });
@@ -339,29 +386,80 @@
   board.style.setProperty('--cols', cols);
   board.style.setProperty('--rows', rows);
 
-  const grid = new Map();
-  const [sx, sy, sd] = board.dataset.source.split(',');
-  const source = board.querySelector('.lp-source');
-  place(source, `${sx},${sy}`);
+  const en = document.documentElement.lang.startsWith('en');
+  const stages = [
+    {
+      name: ['Il gomito', 'The elbow'], source: [0,3,'E'], door: [5,1],
+      walls: [[3,3],[1,1]], gems: [[2,3,2],[2,1,0]],
+      copy: ['Tocca i cristalli per girarli. Come fai a portare il raggio sulla fila della porta?', 'Tap the crystals to rotate them. How can you lift the beam onto the same row as the door?']
+    },
+    {
+      name: ['Il giro largo', 'The long way round'], source: [0,2,'E'], door: [4,0],
+      walls: [[3,2],[2,1],[0,4]], gems: [[2,2,0],[2,4,3],[4,4,2]],
+      copy: ['La via più corta è chiusa. Guarda lo spazio sotto il muro prima di girare i cristalli.', 'The shortcut is blocked. Look below the wall before turning the crystals.']
+    },
+    {
+      name: ['A ritroso', 'Trace it back'], source: [5,0,'W'], door: [2,1],
+      walls: [[2,2],[3,2],[0,3]], gems: [[1,0,0],[1,3,2],[4,3,2],[4,1,0]],
+      copy: ['Il raggio passa sopra la porta. Parti dalla serratura e cerca il percorso a ritroso.', 'The beam passes above the door. Start at the lock and trace a path backwards.']
+    }
+  ];
+  let current = 0;
+  const lang = en ? 1 : 0;
+  const next = panel.querySelector('.lp-next');
+  const reset = panel.querySelector('.lp-reset');
   const door = board.querySelector('.lp-door');
-  place(door, board.dataset.door);
-  grid.set(board.dataset.door, { type: 'door' });
-  board.dataset.walls.split(/\s+/).filter(Boolean).forEach((cell) => {
-    const wall = document.createElement('span');
-    wall.className = 'lp-wall';
-    wall.setAttribute('aria-hidden', 'true');
-    place(wall, cell);
-    board.insertBefore(wall, source);
-    grid.set(cell, { type: 'wall' });
-  });
-  const crystals = [...board.querySelectorAll('.lp-crystal')].map((el) => {
-    const start = Number(el.dataset.turn);
-    const c = { type: 'crystal', el, start, o: start, turns: 0 };
-    place(el, el.dataset.cell);
-    el.style.setProperty('--a', `${start * 90}deg`);
-    grid.set(el.dataset.cell, c);
-    return c;
-  });
+  const source = board.querySelector('.lp-source');
+  const grid = new Map();
+  let crystals = [];
+  let sx, sy, sd;
+  function loadStage(index, focus = false) {
+    clearTimeout(pending);
+    current = index;
+    const stage = stages[index];
+    [sx, sy, sd] = stage.source;
+    won = false;
+    moves = 0;
+    movesOut.textContent = '0';
+    status.textContent = '';
+    next.hidden = true;
+    if (cta) cta.hidden = true;
+    panel.querySelector('.lp-chapter').textContent = (en ? 'Puzzle ' : 'Enigma ') + (index + 1) + ' / ' + stages.length;
+    panel.querySelector('.play-title').textContent = stage.name[lang];
+    panel.querySelector('.lp-instruction').textContent = stage.copy[lang];
+    board.classList.remove('won');
+    door.classList.remove('open');
+    grid.clear();
+    board.querySelectorAll('.lp-wall, .lp-crystal').forEach(el => el.remove());
+    place(source, [sx,sy].join(','));
+    source.style.setProperty('--source-angle', DIR[sd] * 90 + 'deg');
+    place(door, stage.door.join(','));
+    grid.set(stage.door.join(','), {type:'door'});
+    stage.walls.forEach(pos => {
+      const wall = document.createElement('span');
+      wall.className = 'lp-wall';
+      wall.setAttribute('aria-hidden', 'true');
+      place(wall, pos.join(','));
+      grid.set(pos.join(','), {type:'wall'});
+      board.append(wall);
+    });
+    crystals = stage.gems.map(([x,y,start], i) => {
+      const el = document.createElement('button');
+      el.type = 'button';
+      el.className = 'lp-crystal';
+      el.setAttribute('aria-label', (en ? 'Rotate crystal ' : 'Ruota il cristallo ') + (i+1));
+      el.innerHTML = '<span class="lp-gem" aria-hidden="true"></span>';
+      place(el, [x,y].join(','));
+      el.style.setProperty('--a', start * 90 + 'deg');
+      const crystal = {type:'crystal', el, o:start, angle:start};
+      el.addEventListener('click', () => rotate(crystal));
+      grid.set([x,y].join(','), crystal);
+      board.append(el);
+      return crystal;
+    });
+    render(false);
+    if (focus) crystals[0].el.focus({preventScroll:true});
+  }
 
   const DIR = { N: 0, E: 1, S: 2, W: 3 };
   const STEP = [[0, -1], [1, 0], [0, 1], [-1, 0]];
@@ -444,9 +542,12 @@
     board.classList.add('won');
     door.classList.add('open');
     crystals.forEach((c) => { c.el.disabled = true; });
-    status.textContent = status.dataset.win;
-    if (cta) cta.hidden = false;
-    if (hadFocus) (cta || panel.querySelector('.lp-reset')).focus({ preventScroll: true });
+    const last = current === stages.length - 1;
+    status.textContent = last ? (en ? 'All three doors are open.' : 'Hai aperto tutte e tre le porte.') : (en ? 'The door is open.' : 'La porta è aperta.');
+    next.hidden = false;
+    next.textContent = last ? (en ? 'Play again' : 'Rigioca i tre enigmi') : (en ? 'Next puzzle' : 'Enigma successivo');
+    if (cta) cta.hidden = !last;
+    if (hadFocus) next.focus({preventScroll:true});
     buzz([18, 70, 34]);
   };
 
@@ -454,41 +555,20 @@
     pending = 0;
     const r = render(true);
     if (r.end === 'door' && !won) win();
-    else if (moves >= 8 && !won && !status.textContent) status.textContent = status.dataset.hint;
   };
 
-  crystals.forEach((c) => {
-    c.el.addEventListener('click', () => {
-      if (won) return;
-      c.turns += 1;
-      c.o = (c.start + c.turns) % 4;
-      c.el.style.setProperty('--a', `${(c.start + c.turns) * 90}deg`);
-      moves += 1;
-      movesOut.textContent = String(moves);
-      buzz(8);
-      clearTimeout(pending);
-      pending = setTimeout(settle, motion() ? 200 : 0);
-    });
-  });
-
-  panel.querySelector('.lp-reset').addEventListener('click', () => {
+  function rotate(crystal) {
+    if (won) return;
+    crystal.angle++;
+    crystal.o = crystal.angle % 4;
+    crystal.el.style.setProperty('--a', crystal.angle * 90 + 'deg');
+    movesOut.textContent = String(++moves);
+    buzz(8);
     clearTimeout(pending);
-    won = false;
-    moves = 0;
-    movesOut.textContent = '0';
-    status.textContent = '';
-    if (cta) cta.hidden = true;
-    board.classList.remove('won');
-    door.classList.remove('open');
-    crystals.forEach((c) => {
-      c.turns += (4 - (c.turns % 4)) % 4;
-      c.o = c.start;
-      c.el.disabled = false;
-      c.el.style.setProperty('--a', `${(c.start + c.turns) * 90}deg`);
-    });
-    pending = setTimeout(settle, motion() ? 260 : 0);
-  });
-
+    pending = setTimeout(settle, motion() ? 160 : 0);
+  }
+  reset.addEventListener('click', () => loadStage(current, true));
+  next.addEventListener('click', () => loadStage((current + 1) % stages.length, true));
   panel.hidden = false;
-  render(false);
+  loadStage(0);
 })();

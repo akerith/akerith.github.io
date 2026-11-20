@@ -24,13 +24,14 @@
 <link rel="preload" href="./assets/fonts/latin-0.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="./assets/fonts/latin-1.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="./assets/fonts/fonts.css">
-<link rel="stylesheet" href="./sito.css?v=a970b768">
+<link rel="stylesheet" href="./sito.css?v=flow-pausa-2s">
 <link rel="icon" href="./favicon.ico" sizes="48x48">
 <link rel="icon" type="image/png" sizes="32x32" href="./assets/favicon-32.png">
 <link rel="apple-touch-icon" sizes="180x180" href="./assets/apple-touch-icon.png">
-<link rel="preload" as="image" href="./assets/portal-cinematic-v2.webp">
-<script src="./cinematic.js?v=0e545ba2" defer></script>
+<link rel="preload" as="image" href="./assets/porte/marea-illustrata.webp">
+<script src="./cinematic.js?v=flow-dissolvenza-2" defer></script>
 <script type="application/ld+json">{"@type": "Organization", "@id": "https://lsgamesstudio.it/#studio", "name": "LSGames Studio", "url": "https://lsgamesstudio.it/", "logo": "https://lsgamesstudio.it/assets/icon-512.png", "email": "supporto@lsgamesstudio.it", "slogan": "Giochi fatti bene, che ti trattano bene.", "founder": {"@type": "Person", "name": "Gaetano Tommaso Lo Scalzo"}, "address": {"@type": "PostalAddress", "addressCountry": "IT"}, "sameAs": ["https://www.youtube.com/@lsgamesstudio", "https://www.instagram.com/lsgamesstudio/", "https://www.tiktok.com/@lsgamesstudio"], "@context": "https://schema.org", "description": "Piccolo studio italiano di giochi per telefono. Ogni gioco si finisce senza pagare, senza energia che finisce e senza fretta finta. Il primo: Atlantide."}</script>
+<script>if (new URLSearchParams(location.search).get('carattere') === 'manrope') document.documentElement.classList.add('hero-type-manrope');</script>
 </head>
 <body class="home">
 <a class="skip" href="#contenuto">Vai al contenuto</a>
@@ -43,9 +44,9 @@
 <section class="hero" aria-labelledby="titolo">
   <div class="hero-scene" aria-hidden="true"><div class="hero-art"></div><div class="portal-glow"></div><div class="haze"></div><div class="embers"></div></div>
   <div class="hero-content wrap">
-    <h1 id="titolo">Giochi fatti bene,<br>che ti trattano bene.</h1>
-    <p class="hero-description">LSGames Studio fa giochi per telefono curati nei dettagli. Si giocano fino in fondo senza pagare, senza energia che finisce e senza fretta finta.</p>
-    <div class="hero-actions"><a class="hero-link" href="atlantide/">Scopri Atlantide</a><a class="quiet-link" href="regole/">Leggi le nostre regole</a></div>
+    <h1 id="titolo">Si gioca<br>quando vuoi tu.</h1>
+    <p class="hero-description"><span class="hero-lead">Cinque minuti in treno o una serata sul divano.</span> I nostri giochi ti aspettano: niente energia da ricaricare, niente conto alla rovescia.</p>
+    <div class="hero-actions"><a class="hero-link" href="#giochi">I nostri giochi</a><a class="quiet-link" href="studio/">Conosci lo studio</a></div>
   </div>
   <div class="hero-bottom wrap"><button class="motion-toggle" type="button" aria-pressed="true" data-pause="Ferma le animazioni" data-play="Riavvia le animazioni" hidden><span class="motion-icon" aria-hidden="true">Ⅱ</span> <span class="motion-label">Ferma le animazioni</span></button></div>
 </section>
@@ -55,9 +56,9 @@
 
 <!-- Un gioco = un blocco "feature". Il prossimo si aggiunge qui sotto: si alterna da solo a destra e a sinistra. -->
 <article class="feature" aria-labelledby="gioco-atlantide">
-  <div class="feature-scene" aria-hidden="true"><img src="./assets/atlantide.webp" alt="" width="1024" height="500" loading="lazy"><video class="scene-video" data-media="(max-width: 1000px)" muted playsinline loop preload="none" data-src="./assets/atlantide-loop.mp4" data-poster="./assets/atlantide-loop.webp"></video></div>
+  <div class="feature-scene" aria-hidden="true"><img src="./assets/atlantide-canale.webp" alt="" width="1672" height="941" loading="lazy"><video class="scene-video" data-media="(max-width: 1000px)" muted playsinline loop preload="none" data-src="./assets/atlantide-flow.mp4" poster="./assets/atlantide-flow.webp" data-webm="./assets/atlantide-flow.webm" data-loop-pause></video></div>
   <div class="wrap feature-content">
-    <div class="feature-phone" aria-hidden="true"><video data-media="(min-width: 1001px)" muted playsinline loop preload="none" data-src="./assets/atlantide-loop.mp4" data-poster="./assets/atlantide-loop.webp"></video></div>
+    <div class="feature-phone" aria-hidden="true"><video data-media="(min-width: 1001px)" muted playsinline loop preload="none" data-src="./assets/atlantide-flow.mp4" poster="./assets/atlantide-flow.webp" data-webm="./assets/atlantide-flow.webm" data-loop-pause></video></div>
     <p class="feature-kicker">Rompicapo per Android</p>
     <h3 id="gioco-atlantide" class="feature-title">Atlantide<span>Gates of Light</span></h3>
     <p class="feature-text">Un rompicapo di luce: ruota i cristalli, spingi le pietre e dividi i raggi con i prismi, finché la luce raggiunge ogni porta. 100 enigmi in 10 sale, una Torre che non finisce e un enigma nuovo ogni giorno.</p>
@@ -69,18 +70,18 @@
     <img src="./assets/atlantide/it-3.webp" alt="Il calendario dell'enigma del giorno, con una serie di sette giorni" width="720" height="1280" loading="lazy">
     <img src="./assets/atlantide/it-4.webp" alt="La città di Atlantide che torna a illuminarsi" width="720" height="1280" loading="lazy">
   </div>
-  <div class="wrap feature-play" hidden>
+  <div id="demo" class="wrap feature-play" hidden>
     <div class="play-copy">
-      <h4 class="play-title">Prova ad aprire una porta.</h4>
-      <p>Tocca un cristallo per girarlo. Quando la luce arriva alla porta, la porta si apre. È un pezzo vero di Atlantide: la prima sala comincia così.</p>
-      <p class="lp-status" aria-live="polite" data-hint="La luce si ferma sul cristallo: giralo finché la lascia passare." data-win="La porta è aperta. In Atlantide te ne aspettano altre cento, sempre più ingegnose."></p>
-      <div class="lp-actions"><span class="lp-moves">Mosse: <b>0</b></span><button class="lp-reset text-link" type="button">Ricomincia</button><a class="button button--store lp-cta" href="atlantide/" hidden>Scopri Atlantide</a></div>
+      <p class="lp-chapter"></p>
+      <h4 class="play-title"></h4>
+      <p class="lp-instruction"></p>
+      <p class="lp-status" role="status"></p>
+      <div class="lp-actions"><span class="lp-moves">Mosse: <b>0</b></span><button class="lp-reset text-link" type="button">Ricomincia</button><button class="button button--store lp-next" type="button" hidden>Enigma successivo</button><a class="button button--store lp-cta" href="atlantide/" hidden>Scopri Atlantide</a></div>
     </div>
-    <div class="lightplay" role="group" aria-label="Rompicapo di luce: una sorgente, tre cristalli e una porta" data-cols="6" data-rows="5" data-source="0,1,E" data-door="5,0" data-walls="1,3 4,0">
+    <div class="lightplay" role="group" aria-label="Enigma di luce" data-cols="6" data-rows="5">
       <svg class="lp-beam" viewBox="0 0 6 5" aria-hidden="true"><path class="lp-glow" d=""/><path class="lp-core" d=""/><path class="lp-flow" d=""/></svg>
       <span class="lp-source" aria-hidden="true"></span>
       <span class="lp-door" aria-hidden="true"><i></i><i></i></span>
-      <button class="lp-crystal" type="button" data-cell="3,1" data-turn="0" aria-label="Cristallo 1: tocca per girarlo"><span class="lp-gem" aria-hidden="true"></span></button><button class="lp-crystal" type="button" data-cell="3,3" data-turn="1" aria-label="Cristallo 2: tocca per girarlo"><span class="lp-gem" aria-hidden="true"></span></button><button class="lp-crystal" type="button" data-cell="5,3" data-turn="1" aria-label="Cristallo 3: tocca per girarlo"><span class="lp-gem" aria-hidden="true"></span></button>
     </div>
   </div>
 </article>
